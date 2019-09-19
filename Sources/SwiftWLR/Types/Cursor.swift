@@ -4,10 +4,10 @@ import SwiftWayland
 public class WLRCursor {
     let wlrCursor: UnsafeMutablePointer<wlr_cursor>
 
-    public let onMotion: WLSignal<WLRPointerMotionEvent>
-    public let onAbsoluteMotion: WLSignal<WLRPointerAbsoluteMotionEvent>
-    public let onButton: WLSignal<WLRPointerButtonEvent>
-    public let onAxis: WLSignal<WLRPointerAxisEvent>
+    public let onMotion: WLSignal<WLRPointer.MotionEvent>
+    public let onAbsoluteMotion: WLSignal<WLRPointer.AbsoluteMotionEvent>
+    public let onButton: WLSignal<WLRPointer.ButtonEvent>
+    public let onAxis: WLSignal<WLRPointer.AxisEvent>
     public let onFrame: WLSignal<WLRPointer>
 
     public var position: Point {

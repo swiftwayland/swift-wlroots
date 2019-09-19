@@ -314,10 +314,10 @@ class TinyWLCursor {
     var mode: Mode = .passthrough
     private let state: TinyWLState
 
-    var motionListener: WLListener<WLRPointerMotionEvent>!
-    var absoluteMotionListener: WLListener<WLRPointerAbsoluteMotionEvent>!
-    var buttonListener: WLListener<WLRPointerButtonEvent>!
-    var axisListener: WLListener<WLRPointerAxisEvent>!
+    var motionListener: WLListener<WLRPointer.MotionEvent>!
+    var absoluteMotionListener: WLListener<WLRPointer.AbsoluteMotionEvent>!
+    var buttonListener: WLListener<WLRPointer.ButtonEvent>!
+    var axisListener: WLListener<WLRPointer.AxisEvent>!
     var frameListener: WLListener<WLRPointer>!
 
     init(_ cursor: WLRCursor, state: TinyWLState) {
@@ -441,17 +441,17 @@ class TinyWLCursor {
         }
     }
 
-    func onMotion(event: WLRPointerMotionEvent) {
+    func onMotion(event: WLRPointer.MotionEvent) {
         cursor.move(by: event.delta, using: event.device)
         processMotion(time: event.timeInMilliseconds)
     }
 
-    func onAbsoluteMotion(event: WLRPointerAbsoluteMotionEvent) {
+    func onAbsoluteMotion(event: WLRPointer.AbsoluteMotionEvent) {
         cursor.move(to: event.normalizedPosition, using: event.device)
         processMotion(time: event.timeInMilliseconds)
     }
 
-    func onButton(event: WLRPointerButtonEvent) {
+    func onButton(event: WLRPointer.ButtonEvent) {
         state.seat.seat.notifyPointerButton(
             event.button, state: event.state, time: event.timeInMilliseconds)
 
@@ -467,7 +467,7 @@ class TinyWLCursor {
         result.view.focus()
     }
 
-    func onAxis(event: WLRPointerAxisEvent) {
+    func onAxis(event: WLRPointer.AxisEvent) {
         state.seat.seat.notifyPointerAxis(
             delta: event.delta, discreteDelta: event.discreteDelta,
             source: event.source, orientation: event.orientation,
