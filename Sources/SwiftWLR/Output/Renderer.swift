@@ -1,4 +1,5 @@
 import Cwlroots
+import SwiftWayland
 
 public typealias Color = (Float, Float, Float, Float)
 
@@ -7,6 +8,10 @@ public class WLRRenderer {
 
     init(_ pointer: UnsafeMutablePointer<wlr_renderer>) {
         self.wlrRenderer = pointer
+    }
+
+    public func initialize(display: WLDisplay) {
+        wlr_renderer_init_wl_display(wlrRenderer, display.pointer)
     }
 
     public func begin(resolution: Area) {
@@ -26,5 +31,9 @@ public class WLRRenderer {
 
     public func end() {
         wlr_renderer_end(wlrRenderer)
+    }
+
+    public func destroy() {
+        wlr_renderer_destroy(wlrRenderer)
     }
 }

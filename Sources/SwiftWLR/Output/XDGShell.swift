@@ -7,8 +7,8 @@ public class WLRXDGShell {
 
     public let onNewXDGSurface: WLSignal<WLRXDGSurface>
 
-    public init(display: OpaquePointer) {
-        self.wlrXDGShell = wlr_xdg_shell_create(display)
+    public init(display: WLDisplay) {
+        self.wlrXDGShell = wlr_xdg_shell_create(display.pointer)
         self.onNewXDGSurface = WLSignal(&wlrXDGShell.pointee.events.new_surface)
     }
 }

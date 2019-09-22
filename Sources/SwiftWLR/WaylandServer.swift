@@ -5,8 +5,8 @@ import SwiftWayland
 import Glibc
 
 public class WaylandServer {
-    public let display: OpaquePointer
-    public let backend: UnsafeMutablePointer<wlr_backend>
+    public let display: WLDisplay
+    public let backend: WLRBackend
     public let renderer: WLRRenderer
 
     public let xdgShell: WLRXDGShell
@@ -17,60 +17,66 @@ public class WaylandServer {
     public var onNewInput: WLSignal<SomeWLRInputDevice>!
 
     public init() {
-        guard let display = wl_display_create() else {
+        guard let display = WLDisplay() else {
             fatalError("Failed to create display")
         }
 
-        guard let backend = wlr_backend_autocreate(display, nil) else {
-            wl_display_destroy(display)
+        guard let backend =
+            WLRMultiBackend.createAutomatically(on: display) else {
+            display.destroy()
             fatalError("Failed to start backend")
         }
 
-        guard let renderer = wlr_backend_get_renderer(backend) else {
-            wlr_backend_destroy(backend)
-            wl_display_destroy(display)
+        guard let renderer = backend.renderer else {
+            backend.destroy()
+            display.destroy()
             fatalError("Failed to get renderer")
         }
 
-        wlr_renderer_init_wl_display(renderer, display)
+        renderer.initialize(display: display)
 
-        wlr_compositor_create(display, renderer)
-        wlr_data_device_manager_create(display)
+        wlr_compositor_create(display.pointer, renderer.wlrRenderer)
+        wlr_data_device_manager_create(display.pointer)
 
-        guard let socketPointer = wl_display_add_socket_auto(display) else {
-            wlr_backend_destroy(backend)
-            wl_display_destroy(display)
+        guard let socket = display.addSocketAutomatically() else {
+            backend.destroy()
+            display.destroy()
             fatalError("Failed to add socket to display")
         }
 
         let xdgShell = WLRXDGShell(display: display)
 
-        let socket = String(cString: socketPointer)
         setenv("WAYLAND_DISPLAY", socket, 1)
 
         self.display = display
         self.backend = backend
-        self.renderer = WLRRenderer(renderer)
+        self.renderer = renderer
 
         self.xdgShell = xdgShell
 
         self.socket = socket
 
-        // TODO: These events should be defined in future WLRBackend class
-        self.onNewOutput = WLSignal(&backend.pointee.events.new_output)
-        self.onNewInput = WLSignal(&backend.pointee.events.new_input)
+        // TODO: These events should be moved into WLRBackend.
+        self.onNewOutput = WLSignal(
+            &backend.wlrBackend.pointee.events.new_output)
+        self.onNewInput = WLSignal(
+            &backend.wlrBackend.pointee.events.new_input)
+    }
+
+    deinit {
+        display.destroy()
     }
 
     public func run() {
         defer {
-            wl_display_destroy(self.display)
+            display.destroy()
         }
 
-        guard wlr_backend_start(self.backend) else {
-            wlr_backend_destroy(self.backend)
+        guard backend.start() else {
+            backend.destroy()
             fatalError("Failed to start backend")
         }
 
-        wl_display_run(self.display)
+        display.run()
     }
 }

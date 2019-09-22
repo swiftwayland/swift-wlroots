@@ -139,8 +139,8 @@ public class WLRSeat {
         }
     }
 
-    public init(_ name: String, for display: OpaquePointer /* wl_display */) {
-        self.wlrSeat = wlr_seat_create(display, name)
+    public init(_ name: String, for display: WLDisplay) {
+        self.wlrSeat = wlr_seat_create(display.pointer, name)
 
         self.onCursorSetRequest = WLSignal(&wlrSeat.pointee.events.request_set_cursor)
     }
