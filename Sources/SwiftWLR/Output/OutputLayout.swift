@@ -17,7 +17,7 @@ public class WLROutputLayout {
 
         wlr_output_layout_output_coords(
             wlrOutputLayout, output.wlrOutput, &coordinates[0], &coordinates[1])
-        
+
         return (x: coordinates[0], y: coordinates[1])
     }
 }

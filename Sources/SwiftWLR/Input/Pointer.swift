@@ -215,3 +215,9 @@ public final class WLRPointer: WLRInputDeviceProtocol, RawPointerInitializable {
         self.wlrPointer = pointer
     }
 }
+
+extension WLRInputDevice where Inner == WLRPointer {
+    public var pointer: WLRPointer {
+        return WLRPointer(self.wlrInputDevice.pointee.pointer!)
+    }
+}

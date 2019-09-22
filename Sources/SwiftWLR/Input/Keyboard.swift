@@ -115,3 +115,9 @@ public final class WLRKeyboard
         self.onKey = WLSignal(&wlrKeyboard.pointee.events.key)
     }
 }
+
+extension WLRInputDevice where Inner == WLRKeyboard {
+    public var keyboard: WLRKeyboard {
+        return WLRKeyboard(self.wlrInputDevice.pointee.keyboard!)
+    }
+}

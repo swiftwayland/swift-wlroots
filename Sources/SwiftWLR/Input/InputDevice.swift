@@ -115,15 +115,3 @@ public final class WLRInputDevice<Inner: WLRInputDeviceProtocol>
         self.wlrInputDevice = pointer
     }
 }
-
-extension WLRInputDevice where Inner == WLRKeyboard {
-    public var keyboard: WLRKeyboard {
-        return WLRKeyboard(self.wlrInputDevice.pointee.keyboard!)
-    }
-}
-
-extension WLRInputDevice where Inner == WLRPointer {
-    public var pointer: WLRPointer {
-        return WLRPointer(self.wlrInputDevice.pointee.pointer!)
-    }
-}
