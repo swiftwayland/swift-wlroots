@@ -12,7 +12,7 @@ let state = TinyWLState(for: server)
 
 logger.info("Running Wayland compositor on WAYLAND_DISPLAY=\(server.socket)")
 
-try! Process.run(
+let _ = try! Process.run(
     URL(fileURLWithPath: "/bin/sh", isDirectory: false),
     arguments: ["-c", "alacritty"]
 )
