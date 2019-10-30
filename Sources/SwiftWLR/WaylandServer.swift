@@ -13,8 +13,8 @@ public class WaylandServer {
 
     public let socket: String
 
-    public var onNewOutput: WLSignal<WLROutput>!
-    public var onNewInput: WLSignal<SomeWLRInputDevice>!
+    public var onNewOutput: WLSignal<WLROutput>
+    public var onNewInput: WLSignal<SomeWLRInputDevice>
 
     public init() {
         guard let display = WLDisplay() else {
